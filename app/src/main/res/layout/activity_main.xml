@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/mainLayout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:Toolbar="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background_general">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar1"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="#70000000"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
+        Toolbar:title="@string/app_name"
+        Toolbar:subtitle="@string/subtitle1"
+        />
+    <TextView
+        android:id="@+id/heading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/toolbar1"
+        android:gravity="center"
+        android:text="@string/headingT"
+        android:textSize="30sp" />
+    <TextView
+        android:id="@+id/scoreT"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/heading"
+        android:gravity="center"
+        android:textSize="70sp" />
+    <Button
+        android:id="@+id/saveB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/scoreT"
+        android:layout_gravity="center"
+        android:text="@string/save" />
+    <TextView
+        android:id="@+id/savedT"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/containerV"
+        android:layout_below="@+id/scoreT"
+        android:layout_toEndOf="@+id/saveB"
+        android:layout_toStartOf="@+id/startB"
+        android:text="@string/saved"
+        android:textSize="12sp" />
+    <Button
+        android:id="@+id/startB"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/scoreT"
+        android:layout_alignEnd="@+id/containerV"
+        android:layout_gravity="center"
+        android:text="@string/start" />
+    <LinearLayout
+        android:id="@+id/containerV"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="7.5dp"
+        android:layout_marginStart="15dp"
+        android:layout_below="@+id/startB"
+        android:layout_centerHorizontal="true"
+        android:alpha="1">
+        <ImageView
+            android:id="@+id/blocker"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:src="@drawable/black_hole"
+            tools:ignore="ContentDescription" />
+        <ImageView
+            android:id="@+id/trigger"
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:src="@drawable/spaceship"
+            tools:ignore="ContentDescription" />
+
+    </LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/leaderboard_bar"
+        android:title="@string/leaderboardTB"
+        android:icon="@drawable/trophy"
+        app:showAsAction="always"/>
+    <item
+        android:id="@+id/addScore_bar"
+        android:title="@string/add_scoreTB"
+        android:icon="@drawable/add_person"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/apodData_bar"
+        android:title="@string/apod_dataTB"
+        android:icon="@drawable/satellite"
+        app:showAsAction="always"/>
+</menu>
