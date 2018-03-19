@@ -8,12 +8,12 @@ import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -25,19 +25,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
 import com.squareup.picasso.Picasso;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.Calendar;
 import java.util.Random;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener,
         DatePickerFragment.DatePickerFragmentListener {
@@ -53,14 +48,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Vibrator vibrator;
     Toolbar toolbar;
     Random random = new Random();
-    RequestQueue queue;
     String dateDF;
     Point p = new Point();
     View mainViewAPOD;
     AlertDialog.Builder builder;
     //String[] attrRefAPOD = {"title","date","explanation","copyright","url"};
     //String[] attrCurrentAPOD = new String[5];
-
 
     @SuppressLint({"DefaultLocale", "ResourceType"})
     @Override
@@ -75,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         resetB = findViewById(R.id.startB);
         saveB = findViewById(R.id.saveB);
         savedT = findViewById(R.id.savedT);
-        queue = Volley.newRequestQueue(this);
         mainViewAPOD =  this.getLayoutInflater().inflate(R.layout.layout_apod, null);
         titleApodT = mainViewAPOD.findViewById(R.id.title_APOD);
         dateApodT = mainViewAPOD.findViewById(R.id.date_APOD);
@@ -214,6 +206,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void renewAPOD() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(getString(R.string.urlAPOD))
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        ApodInterface apodI = retrofit.create(ApodInterface.class);
+        Call<APODdata> call = apodI.getAPOD(dateDF);
+        call.enqueue(new Callback<APODdata>() {
+            @Override
+            public void onResponse(Call<APODdata> call, retrofit2.Response<APODdata> response) {
+                    APODdata apodData = response.body();
+                    titleApodT.setText(apodData.getTitle());
+                    dateApodT.setText(apodData.getDate());
+                    explanationApodT.setText(apodData.getExplanation());
+                    copyrightApodT.setText(apodData.getCopyright());
+                    Picasso.with(getApplicationContext())
+                            .load(apodData.getUrl())
+                            .error(R.drawable.blocker)
+                            .into(urlApodIV);
+            }
+
+            @Override
+            public void onFailure(Call<APODdata> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Error :( so sad", Toast.LENGTH_LONG).show();
+            }
+        });
+
+        /*
         Calendar calendarCURRENT = Calendar.getInstance();
         //rYYY < current year
         int rYYYY = random.nextInt(calendarCURRENT.get(Calendar.YEAR) - 1996) + 1996;
@@ -244,6 +263,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         , null);
         queue.add(jsonRequest);
+        */
     }
 
     @Override
