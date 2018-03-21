@@ -15,6 +15,7 @@ import android.os.Vibrator;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -52,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Point p = new Point();
     View mainViewAPOD;
     AlertDialog.Builder builder;
+    APODdata apodData = new APODdata();
     //String[] attrRefAPOD = {"title","date","explanation","copyright","url"};
     //String[] attrCurrentAPOD = new String[5];
 
@@ -207,7 +209,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public void renewAPOD() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(getString(R.string.urlAPOD))
+                .baseUrl(ApodInterface.baseURL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         ApodInterface apodI = retrofit.create(ApodInterface.class);
@@ -215,20 +217,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         call.enqueue(new Callback<APODdata>() {
             @Override
             public void onResponse(Call<APODdata> call, retrofit2.Response<APODdata> response) {
-                    APODdata apodData = response.body();
-                    titleApodT.setText(apodData.getTitle());
-                    dateApodT.setText(apodData.getDate());
-                    explanationApodT.setText(apodData.getExplanation());
-                    copyrightApodT.setText(apodData.getCopyright());
+                if(response.isSuccessful()){
+                    apodData = response.body();
+                    titleApodT.setText(apodData.getTitle_apod());
+                    dateApodT.setText(apodData.getDate_apod());
+                    explanationApodT.setText(apodData.getExplanation_apod());
+                    copyrightApodT.setText(apodData.getCopyright_apod());
                     Picasso.with(getApplicationContext())
-                            .load(apodData.getUrl())
+                            .load(apodData.getUrl_apod())
                             .error(R.drawable.blocker)
                             .into(urlApodIV);
+                }
+                else {
+                    Log.e("Error Code", String.valueOf(response.code()));
+                    Log.e("Error Body", response.body().toString());
+                }
             }
-
             @Override
             public void onFailure(Call<APODdata> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Error :( so sad", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "Retrofit Error :( so sad", Toast.LENGTH_LONG).show();
             }
         });
 

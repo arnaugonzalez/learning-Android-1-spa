@@ -11,43 +11,43 @@ public class APODdata {
     private String url;
     private String copyright;
 
-    public String getTitle() {
+    public String getTitle_apod() {
         return title;
     }
 
-    public void setTitle(String title) {
+    public void setTitle_apod(String title) {
         this.title = title;
     }
 
-    public String getDate() {
+    public String getDate_apod() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate_apod(String date) {
         this.date = date;
     }
 
-    public String getExplanation() {
+    public String getExplanation_apod() {
         return explanation;
     }
 
-    public void setExplanation(String explanation) {
+    public void setExplanation_apod(String explanation) {
         this.explanation = explanation;
     }
 
-    public String getUrl() {
+    public String getUrl_apod() {
         return url;
     }
 
-    public void setUrl(String url) {
+    public void setUrl_apod(String url) {
         this.url = url;
     }
 
-    public String getCopyright() {
+    public String getCopyright_apod() {
         return copyright;
     }
 
-    public void setCopyright(String copyright) {
+    public void setCopyright_apod(String copyright) {
         this.copyright = copyright;
     }
 

@@ -42,7 +42,7 @@ public class DatePickerFragment extends DialogFragment
     }
 
     public void onDateSet(DatePicker view, int year, int month, int day) {
-        String datePicked = year + "-" + month + "-" + day;
+        String datePicked = year + "-" + (month + 1) + "-" + day;
         listener.onFinishDatePickerDialog(datePicked);
     }
 }
