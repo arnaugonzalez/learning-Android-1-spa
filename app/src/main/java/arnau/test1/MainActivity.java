@@ -70,12 +70,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         resetB = findViewById(R.id.startB);
         saveB = findViewById(R.id.saveB);
         savedT = findViewById(R.id.savedT);
-        mainViewAPOD =  this.getLayoutInflater().inflate(R.layout.layout_apod, null);
-        titleApodT = mainViewAPOD.findViewById(R.id.title_APOD);
-        dateApodT = mainViewAPOD.findViewById(R.id.date_APOD);
-        explanationApodT = mainViewAPOD.findViewById(R.id.explanation_APOD);
-        copyrightApodT = mainViewAPOD.findViewById(R.id.copyright_APOD);
-        urlApodIV = mainViewAPOD.findViewById(R.id.url_APOD);
         builder = new AlertDialog.Builder(MainActivity.this);
         toolbar = findViewById(R.id.toolbar1);
         toolbar.inflateMenu(R.menu.toolbar_menu);
@@ -91,6 +85,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         return true;
                     case R.id.apodData_bar:
                         renewAPOD();
+                        mainViewAPOD =  getLayoutInflater().inflate(R.layout.layout_apod, null);
+                        titleApodT = mainViewAPOD.findViewById(R.id.title_APOD);
+                        dateApodT = mainViewAPOD.findViewById(R.id.date_APOD);
+                        explanationApodT = mainViewAPOD.findViewById(R.id.explanation_APOD);
+                        copyrightApodT = mainViewAPOD.findViewById(R.id.copyright_APOD);
+                        urlApodIV = mainViewAPOD.findViewById(R.id.url_APOD);
                         Dialog alertDialog = new Dialog(MainActivity.this);
                         alertDialog.setContentView(mainViewAPOD);
                         WindowManager.LayoutParams lp = new WindowManager.LayoutParams();

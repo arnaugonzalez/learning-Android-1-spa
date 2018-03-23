@@ -1,56 +1,78 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
+
     <TextView
         android:id="@+id/title_APOD"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="30sp" />
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="30sp"
+        android:textStyle="bold" />
+
     <TextView
+        android:id="@+id/date_Ref"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/title_APOD"
+        android:layout_marginTop="38dp"
         android:text="@string/dateRef"
         android:textSize="18sp"
-        android:layout_toEndOf="@+id/date_APOD"
-        android:layout_below="@+id/title_APOD"/>
+        android:textStyle="italic"/>
+
     <TextView
         android:id="@+id/date_APOD"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18sp" />
+        android:layout_alignBaseline="@+id/date_Ref"
+        android:layout_alignBottom="@+id/date_Ref"
+        android:layout_toEndOf="@+id/date_Ref"
+        android:textSize="18sp"
+        android:typeface="monospace"/>
 
     <ScrollView
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:id="@+id/scrollView2">
         <RelativeLayout
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content">
-        <TextView
-            android:id="@+id/explanation_APOD"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="12sp" />
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="5dp"
-            android:text="@string/copyrightRef"
-            android:textSize="14sp"
-            android:layout_toEndOf="@+id/copyright_APOD"/>
-        <TextView
-            android:id="@+id/copyright_APOD"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingTop="5dp"
-            android:textSize="14sp"/>
+
             <ImageView
-            android:id="@+id/url_APOD"
-            android:layout_width="300dp"
-            android:layout_height="150dp"
-            android:layout_marginBottom="12dp" />
+                android:id="@+id/url_APOD"
+                android:layout_width="400dp"
+                android:layout_height="400dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" />
+            <TextView
+                android:id="@+id/copyright_Ref"
+                android:text="@string/copyrightRef"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/url_APOD"
+                android:layout_alignStart="@+id/url_APOD"
+                android:paddingTop="2dp"
+                android:textSize="12sp"
+                android:textStyle="italic|bold" />
+            <TextView
+                android:id="@+id/copyright_APOD"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="5dp"
+                android:textSize="12sp"
+                android:textStyle="italic"/>
+            <TextView
+                android:id="@+id/explanation_APOD"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="14sp"
+                android:justificationMode="inter_word"
+                tools:targetApi="o" />
         </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

@@ -14,5 +14,6 @@
     <string name="apod_dataTB">current APOD Data</string>
     <string name="dateRef">APOD from date: </string>
     <string name="copyrightRef">Photo by/from: </string>
+    <string name="dateDialogT">Date picker</string>
 
 </resources>

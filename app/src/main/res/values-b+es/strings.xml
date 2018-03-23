@@ -13,4 +13,5 @@
     <string name="apod_dataTB">datos de la APOD actual</string>
     <string name="dateRef">APOD del día: </string>
     <string name="copyrightRef">Foto tomada/cedida por: </string>
+    <string name="dateDialogT">Calendario</string>
 </resources>
