@@ -10,8 +10,9 @@
     <string name="subtitle1">Y mucho más…</string>
     <string name="leaderboardTB">Clasificatoria</string>
     <string name="add_scoreTB">Guarda tu puntuación</string>
-    <string name="apod_dataTB">datos de la APOD actual</string>
-    <string name="dateRef">APOD del día: </string>
+    <string name="apod_dataTB">datos de la A.P.O.D. actual</string>
+    <string name="dateRef">"Foto del día:  "</string>
     <string name="copyrightRef">Foto tomada/cedida por: </string>
     <string name="dateDialogT">Calendario</string>
+    <string name="dialogPOSITIVE">¡Cambia el agujero negro por esto!</string>
 </resources>

@@ -11,9 +11,10 @@
     <string name="subtitle1">And much more…</string>
     <string name="leaderboardTB">Leaderboard</string>
     <string name="add_scoreTB">Add your score</string>
-    <string name="apod_dataTB">current APOD Data</string>
-    <string name="dateRef">APOD from date: </string>
+    <string name="apod_dataTB">current A.P.O.D. Data</string>
+    <string name="dateRef">"Picture from date:  "</string>
     <string name="copyrightRef">Photo by/from: </string>
     <string name="dateDialogT">Date picker</string>
+    <string name="dialogPOSITIVE">Replace the black hole with this!</string>
 
 </resources>

@@ -1,9 +1,9 @@
 package arnau.test1;
 
 import android.annotation.SuppressLint;
-import android.app.Dialog;
 import android.app.DialogFragment;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -19,7 +19,6 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -91,14 +90,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         explanationApodT = mainViewAPOD.findViewById(R.id.explanation_APOD);
                         copyrightApodT = mainViewAPOD.findViewById(R.id.copyright_APOD);
                         urlApodIV = mainViewAPOD.findViewById(R.id.url_APOD);
-                        Dialog alertDialog = new Dialog(MainActivity.this);
-                        alertDialog.setContentView(mainViewAPOD);
-                        WindowManager.LayoutParams lp = new WindowManager.LayoutParams();
-                        lp.copyFrom(alertDialog.getWindow().getAttributes());
-                        lp.width = WindowManager.LayoutParams.MATCH_PARENT;
-                        lp.height = WindowManager.LayoutParams.MATCH_PARENT;
-                        alertDialog.show();
-                        alertDialog.getWindow().setAttributes(lp);
+                        builder.setView(mainViewAPOD);
+                        builder.setPositiveButton(R.string.dialogPOSITIVE,
+                                new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                                Picasso.with(getApplicationContext()).load(apodData.getUrl_apod())
+                                        .error(R.drawable.blocker).into(blocker);
+                            }
+                        });
+                        builder.create().show();
                         return true;
                     default:
                         return this.onMenuItemClick(item);
