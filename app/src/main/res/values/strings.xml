@@ -8,13 +8,13 @@
     <string name="savedNEW">Saved Score:</string>
     <string name="equal">Your saved score is already</string>
     <string name="fail">The floor is NASA!</string>
-    <string name="subtitle1">And much more…</string>
-    <string name="leaderboardTB">Leaderboard</string>
-    <string name="add_scoreTB">Add your score</string>
+    <string name="subtitle1">Interactive APOD game!</string>
+    <string name="calendarTB">Date Picker</string>
     <string name="apod_dataTB">current A.P.O.D. Data</string>
     <string name="dateRef">"Picture from date:  "</string>
     <string name="copyrightRef">Photo by/from: </string>
     <string name="dateDialogT">Date picker</string>
     <string name="dialogPOSITIVE">Replace the black hole with this!</string>
+    <string name="defCopyright">NASA archives.</string>
 
 </resources>

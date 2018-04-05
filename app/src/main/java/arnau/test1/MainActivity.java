@@ -53,8 +53,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     View mainViewAPOD;
     AlertDialog.Builder builder;
     APODdata apodData = new APODdata();
-    //String[] attrRefAPOD = {"title","date","explanation","copyright","url"};
-    //String[] attrCurrentAPOD = new String[5];
+    String[] failString = {
+            "Houston, we have a problem...",
+            "Oh no! You entered the gravitatory field of the Black Hole!",
+            "Elon Musk won't be proud of that",
+            "You have seen too much Interestellar",
+            "*** Aliens chuckling on the background ***"
+    };
 
     @SuppressLint({"DefaultLocale", "ResourceType"})
     @Override
@@ -76,15 +81,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public boolean onMenuItemClick(MenuItem item) {
                 switch (item.getItemId()) {
-                    case R.id.leaderboard_bar:
-                        renewAPOD();
-                        return true;
                     case R.id.addScore_bar:
                         showDatePickerDialog();
                         return true;
                     case R.id.apodData_bar:
                         renewAPOD();
-                        mainViewAPOD =  getLayoutInflater().inflate(R.layout.layout_apod, null);
+                        mainViewAPOD = getLayoutInflater().inflate(R.layout.layout_apod, null);
                         titleApodT = mainViewAPOD.findViewById(R.id.title_APOD);
                         dateApodT = mainViewAPOD.findViewById(R.id.date_APOD);
                         explanationApodT = mainViewAPOD.findViewById(R.id.explanation_APOD);
@@ -127,11 +129,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return true;
     }
 
+    //valorar si es pot afegir funcio gif mentre intenta fer apod
+
     public void autoMove(final ImageView image, final int delay){
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable(){
             public void run(){
-                // image.setClickable(true);
                 image.setX(random.nextInt(linV.getWidth() - image.getWidth()));
                 image.setY(random.nextInt(linV.getHeight() - image.getHeight()));
                 handler.postDelayed(this, delay);
@@ -168,13 +171,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         else vibrator.vibrate(VibrationEffect.createOneShot(500,
                                 VibrationEffect.DEFAULT_AMPLITUDE));
                             Toast.makeText(getApplicationContext(),
-                                getString(R.string.fail), Toast.LENGTH_SHORT).show();
+                                failString[random.nextInt(5)], Toast.LENGTH_SHORT).show();
                     }
                     else {
-                        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O)
-                            vibrator.vibrate(100);
-                        else vibrator.vibrate(VibrationEffect.createOneShot(100,
-                                VibrationEffect.DEFAULT_AMPLITUDE));
+                        //if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O)
+                          //  vibrator.vibrate(100);
+                       // else vibrator.vibrate(VibrationEffect.createOneShot(100,
+                         //       VibrationEffect.DEFAULT_AMPLITUDE));
                         scoreUpdate(1);
                     }
                     // trigger.setClickable(false);
@@ -240,39 +243,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Toast.makeText(getApplicationContext(), "Retrofit Error :( so sad", Toast.LENGTH_LONG).show();
             }
         });
-
-        /*
-        Calendar calendarCURRENT = Calendar.getInstance();
-        //rYYY < current year
-        int rYYYY = random.nextInt(calendarCURRENT.get(Calendar.YEAR) - 1996) + 1996;
-        int rMM = random.nextInt(11)+1;
-        int rDD;
-        if(rMM == 2)
-            rDD = random.nextInt(27)+1;
-        else rDD = random.nextInt(29)+1; //NOT 31'S APOD!
-        String randomDate =  rYYYY + "-" + rMM + "-" + rDD;
-        String currentUrl = getResources().getString(R.string.urlAPOD) + "&date=" + randomDate;
-        JsonObjectRequest jsonRequest = new JsonObjectRequest(
-                Request.Method.GET,
-                currentUrl,
-                null, new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject apodJSON) {
-                try {
-                    titleApodT.setText(apodJSON.getString("title"));
-                    dateApodT.setText(apodJSON.getString("date"));
-                    explanationApodT.setText(apodJSON.getString("explanation"));
-                    copyrightApodT.setText(apodJSON.getString("copyright"));
-                    Picasso.with(getApplicationContext()).load(apodJSON.getString("url"))
-                            .error(R.drawable.blocker).into(urlApodIV);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            }
-        , null);
-        queue.add(jsonRequest);
-        */
     }
 
     @Override
