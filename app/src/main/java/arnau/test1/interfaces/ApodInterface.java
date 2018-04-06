@@ -1,5 +1,6 @@
-package arnau.test1;
+package arnau.test1.interfaces;
 
+import arnau.test1.APODdata;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;

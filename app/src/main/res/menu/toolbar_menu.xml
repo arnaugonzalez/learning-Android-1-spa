@@ -2,12 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/addScore_bar"
+        android:id="@+id/datePicker"
         android:title="@string/calendarTB"
         android:icon="@drawable/calendar"
         app:showAsAction="ifRoom"/>
     <item
-        android:id="@+id/apodData_bar"
+        android:id="@+id/apodDialog"
         android:title="@string/apod_dataTB"
         android:icon="@drawable/satellite"
         app:showAsAction="always"/>

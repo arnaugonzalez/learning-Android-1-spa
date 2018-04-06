@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/background_general">
+    android:background="@drawable/background_general"
+    android:id="@+id/activityMainLayout">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar1"
@@ -34,7 +35,7 @@
         android:textSize="70sp"
         android:textStyle="bold"/>
     <Button
-        android:id="@+id/saveB"
+        android:id="@+id/saveGame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/scoreT"
@@ -46,12 +47,12 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/containerV"
         android:layout_below="@+id/scoreT"
-        android:layout_toEndOf="@+id/saveB"
-        android:layout_toStartOf="@+id/startB"
+        android:layout_toEndOf="@+id/saveGame"
+        android:layout_toStartOf="@+id/resetGame"
         android:text="@string/saved"
         android:textSize="12sp" />
     <Button
-        android:id="@+id/startB"
+        android:id="@+id/resetGame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/scoreT"
@@ -66,7 +67,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="7.5dp"
         android:layout_marginStart="15dp"
-        android:layout_below="@+id/startB"
+        android:layout_below="@+id/resetGame"
         android:layout_centerHorizontal="true"
         android:alpha="1">
         <ImageView
