@@ -1,9 +1,7 @@
 package arnau.test1;
 
 import android.annotation.SuppressLint;
-import android.app.DialogFragment;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -17,17 +15,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.View;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.squareup.picasso.Picasso;
-
 import java.util.Random;
 
+import arnau.test1.fragments.ApodDialogFragment;
 import arnau.test1.fragments.DatePickerFragment;
 import arnau.test1.interfaces.ApodInterface;
 import butterknife.BindView;
@@ -43,22 +41,27 @@ public class MainActivity extends AppCompatActivity implements
 
     //BINDINGS
     @BindView(R.id.trigger) ImageView trigger;
-    @BindView(R.id.blocker) ImageView blocker;
+    public @BindView(R.id.blocker) ImageView blocker;
     @BindView(R.id.containerV) LinearLayout linV;
     @BindView(R.id.scoreT) TextView scoreT;
     @BindView(R.id.savedT) TextView savedT;
     @BindView(R.id.resetGame) Button resetGame;
     @BindView(R.id.saveGame) Button saveGame;
 
+    @BindView(R.id.activityMainLayout) RelativeLayout mainLayout;
     @BindView(R.id.toolbar1) Toolbar toolbar;
 
-    @BindView(R.id.title_APOD) TextView titleApodT;
-    @BindView(R.id.date_APOD) TextView dateApodT;
-    @BindView(R.id.explanation_APOD) TextView explanationApodT;
-    @BindView(R.id.copyright_APOD) TextView copyrightApodT;
-    @BindView(R.id.url_APOD) ImageView urlApodIV;
-    @BindView(R.id.lAPOD_mainRelative) View mainViewAPOD;
 
+    /*    @Nullable @BindView(R.id.datePicker) MenuItem datePicker;
+        @Nullable @BindView(R.id.apodDialog) MenuItem apodDialog;
+
+    @Nullable @BindView(R.id.title_APOD) TextView titleApodT;
+    @Nullable @BindView(R.id.date_APOD) TextView dateApodT;
+    @Nullable @BindView(R.id.explanation_APOD) TextView explanationApodT;
+    @Nullable @BindView(R.id.copyright_APOD) TextView copyrightApodT;
+    @Nullable @BindView(R.id.url_APOD) ImageView urlApodIV;
+    @Nullable @BindView(R.id.lAPOD_mainRelative) View mainViewAPOD;
+*/
     //DECLARATIONS
     int scoreV;
     SharedPreferences prefs;
@@ -66,7 +69,6 @@ public class MainActivity extends AppCompatActivity implements
     Random random = new Random();
     String dateDF;
     Point p = new Point();
-    AlertDialog.Builder builder;
     AlertDialog dialogAPOD;
     APODdata apodData = new APODdata();
     String[] failString = {
@@ -81,10 +83,9 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        super.onCreateOptionsMenu((Menu) toolbar);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-        toolbar.inflateMenu(R.menu.toolbar_menu);
+        super.setSupportActionBar(toolbar);
         prefs = this.getPreferences(Context.MODE_PRIVATE);
         scoreV = prefs.getInt("pkScore", 0);
         scoreT.setText(String.format("%04d", scoreV));
@@ -94,14 +95,12 @@ public class MainActivity extends AppCompatActivity implements
             vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
         getWindowManager().getDefaultDisplay().getSize(p);
     }
-
+    //valorar si es pot afegir funcio gif mentre intenta fer apod
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
         return true;
     }
-
-    //valorar si es pot afegir funcio gif mentre intenta fer apod
 
     public void autoMove(final ImageView image, final int delay){
         final Handler handler = new Handler();
@@ -181,39 +180,35 @@ public class MainActivity extends AppCompatActivity implements
             prefsEditor.putString("pkSaved", savedT.toString()).apply();
         }
     }
-    @OnClick(R.id.datePicker)
-    public void datePicker(){
-        showDatePickerDialog();
-    }
 
-    @OnClick(R.id.apodDialog)
-    public void apodDialog(){
-        renewAPOD();
-        mainViewAPOD = getLayoutInflater().inflate(R.layout.layout_apod, null);
-        builder.setView(mainViewAPOD);
-        builder.setPositiveButton("replace",
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        Picasso.with(getApplicationContext()).load(apodData.getUrl_apod())
-                                .error(R.drawable.blocker).into(blocker);
-                    }
-                });
-        builder.setNegativeButton("date" , //provisional
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        showDatePickerDialog();
-                    }
-                });
-        dialogAPOD = builder.create();
-        dialogAPOD.show();
-    }
+     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.datePicker:
+                showDatePickerDialog();
+                return true;
+            case R.id.apodDialog:
+                renewAPOD();
+                showApodDialog();
 
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
     public void showDatePickerDialog(){
-        DialogFragment newDFragment = new DatePickerFragment();
+        /* Intent iReceptor = getIntent();
+        int yearIntent = iReceptor.getIntExtra("year", Calendar.getInstance().get(Calendar.YEAR));
+        int monthIntent = iReceptor.getIntExtra("month", Calendar.getInstance().get(Calendar.MONTH));
+        int dayIntent = iReceptor.getIntExtra("day", Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
+        */
+        DatePickerFragment newDFragment = new DatePickerFragment();
         newDFragment.show(this.getFragmentManager(), "datePicker");
+    }
+    public void showApodDialog(){
+        ApodDialogFragment apodFrag = ApodDialogFragment.newInstance(apodData.getTitle_apod(),
+                apodData.getDate_apod(), apodData.getCopyright_apod(),
+                apodData.getExplanation_apod(), apodData.getUrl_apod());
+        apodFrag.show(getSupportFragmentManager(),"dialog");
     }
 
     public void renewAPOD() {
@@ -228,6 +223,8 @@ public class MainActivity extends AppCompatActivity implements
             public void onResponse(Call<APODdata> call, retrofit2.Response<APODdata> response) {
                 if(response.isSuccessful()){
                     apodData = response.body();
+
+                    /*
                     titleApodT.setText(apodData.getTitle_apod());
                     dateApodT.setText(apodData.getDate_apod());
                     explanationApodT.setText(apodData.getExplanation_apod());
@@ -236,6 +233,7 @@ public class MainActivity extends AppCompatActivity implements
                             .load(apodData.getUrl_apod())
                             .error(R.drawable.blocker)
                             .into(urlApodIV);
+                             */
                 }
                 else {
                     Log.e("Error Code", String.valueOf(response.code()));
