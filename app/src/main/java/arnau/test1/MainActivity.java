@@ -190,7 +190,6 @@ public class MainActivity extends AppCompatActivity implements
             case R.id.apodDialog:
                 renewAPOD();
                 showApodDialog();
-
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -202,7 +201,7 @@ public class MainActivity extends AppCompatActivity implements
         int dayIntent = iReceptor.getIntExtra("day", Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
         */
         DatePickerFragment newDFragment = new DatePickerFragment();
-        newDFragment.show(this.getFragmentManager(), "datePicker");
+        newDFragment.show(getFragmentManager(), "datePicker");
     }
     public void showApodDialog(){
         ApodDialogFragment apodFrag = ApodDialogFragment.newInstance(apodData.getTitle_apod(),
@@ -223,17 +222,6 @@ public class MainActivity extends AppCompatActivity implements
             public void onResponse(Call<APODdata> call, retrofit2.Response<APODdata> response) {
                 if(response.isSuccessful()){
                     apodData = response.body();
-
-                    /*
-                    titleApodT.setText(apodData.getTitle_apod());
-                    dateApodT.setText(apodData.getDate_apod());
-                    explanationApodT.setText(apodData.getExplanation_apod());
-                    copyrightApodT.setText(apodData.getCopyright_apod());
-                    Picasso.with(getApplicationContext())
-                            .load(apodData.getUrl_apod())
-                            .error(R.drawable.blocker)
-                            .into(urlApodIV);
-                             */
                 }
                 else {
                     Log.e("Error Code", String.valueOf(response.code()));

@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.widget.ImageView;
@@ -13,18 +15,12 @@ import com.squareup.picasso.Picasso;
 
 import arnau.test1.MainActivity;
 import arnau.test1.R;
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 public class ApodDialogFragment extends DialogFragment {
 
-
-    @BindView(R.id.title_APOD) TextView titleApodT;
-    @BindView(R.id.date_APOD) TextView dateApodT;
-    @BindView(R.id.explanation_APOD) TextView explanationApodT;
-    @BindView(R.id.copyright_APOD) TextView copyrightApodT;
-    @BindView(R.id.url_APOD) ImageView urlApodIV;
-    @BindView(R.id.lAPOD_mainRelative) View mainViewAPOD;
+    TextView titleApodT, dateApodT, copyrightApodT, explanationApodT;
+    ImageView urlApodIV;
+    View mainViewAPOD;
 
     public static ApodDialogFragment newInstance(String title, String date,
                                String copyright, String explanation, String url) {
@@ -43,13 +39,31 @@ public class ApodDialogFragment extends DialogFragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mainViewAPOD = getActivity().getLayoutInflater().inflate(R.layout.layout_apod, null);
+        titleApodT = mainViewAPOD.findViewById(R.id.title_APOD);
+        dateApodT = mainViewAPOD.findViewById(R.id.date_APOD);
+        explanationApodT = mainViewAPOD.findViewById(R.id.explanation_APOD);
+        copyrightApodT = mainViewAPOD.findViewById(R.id.copyright_APOD);
+        urlApodIV = mainViewAPOD.findViewById(R.id.url_APOD);
+
+    }
+
+
+    @NonNull @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        super.onCreateDialog(savedInstanceState);
+        titleApodT.setText(getArguments().getString("title"));
+        dateApodT.setText(getArguments().getString("date"));
+        copyrightApodT.setText(getArguments().getString("copyright"));
+        explanationApodT.setText(getArguments().getString("explanation"));
+        Picasso.with(this.getContext())
+                .load(getArguments().getString("url"))
+                .error(R.drawable.blocker)
+                .into(urlApodIV);
         //setStyle(DialogFragment.STYLE_NO_FRAME, R.style.Theme_AppCompat_DialogWhenLarge);
-        ButterKnife.bind(this, mainViewAPOD);
-        AlertDialog dialog = new AlertDialog.Builder(getActivity())
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
                 .setIcon(R.drawable.satellite)
-                .setView(apodDialogView())
                 .setPositiveButton("replace",
                         new DialogInterface.OnClickListener() {
                             @Override
@@ -65,23 +79,8 @@ public class ApodDialogFragment extends DialogFragment {
                             public void onClick(DialogInterface dialogInterface, int i) {
                                 ((MainActivity)getActivity()).showDatePickerDialog();
                             }
-                        })
-                .create();
-        return dialog;
+                        });
+        builder.setView(mainViewAPOD);
+        return builder.create();
     }
-
-        public View apodDialogView() {
-            View view = getLayoutInflater().inflate(R.layout.layout_apod, null);
-            titleApodT.setText(getArguments().getString("title"));
-            dateApodT.setText(getArguments().getString("date"));
-            copyrightApodT.setText(getArguments().getString("copyright"));
-            explanationApodT.setText(getArguments().getString("explanation"));
-            Picasso.with(this.getContext())
-                    .load(getArguments().getString("url"))
-                    .error(R.drawable.blocker)
-                    .into(urlApodIV);
-            return view;
-        }
-
-
     }
