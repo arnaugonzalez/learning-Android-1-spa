@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -189,7 +190,6 @@ public class MainActivity extends AppCompatActivity implements
                 return true;
             case R.id.apodDialog:
                 renewAPOD();
-                showApodDialog();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -222,6 +222,8 @@ public class MainActivity extends AppCompatActivity implements
             public void onResponse(Call<APODdata> call, retrofit2.Response<APODdata> response) {
                 if(response.isSuccessful()){
                     apodData = response.body();
+                    showApodDialog();
+
                 }
                 else {
                     Log.e("Error Code", String.valueOf(response.code()));
