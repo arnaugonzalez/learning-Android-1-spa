@@ -69,8 +69,6 @@ public class MainActivity extends AppCompatActivity implements
     Vibrator vibrator;
     Random random = new Random();
     String dateDF;
-    Point p = new Point();
-    AlertDialog dialogAPOD;
     APODdata apodData = new APODdata();
     String[] failString = {
             "Houston, we have a problem...",
@@ -92,9 +90,7 @@ public class MainActivity extends AppCompatActivity implements
         scoreT.setText(String.format("%04d", scoreV));
         autoMove(trigger, 750);
         autoMove(blocker, 1200);
-        if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O)
-            vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-        getWindowManager().getDefaultDisplay().getSize(p);
+        vibrator = (Vibrator) getBaseContext().getSystemService(VIBRATOR_SERVICE);
     }
     //valorar si es pot afegir funcio gif mentre intenta fer apod
     @Override
@@ -137,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements
                 (int) blocker.getY() + blocker.getHeight());
         if(Rect.intersects(rTrigger,rBlocker)) {
             scoreUpdate(-3);
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O)
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
                 vibrator.vibrate(500);
             else vibrator.vibrate(VibrationEffect.createOneShot(500,
                     VibrationEffect.DEFAULT_AMPLITUDE));
@@ -145,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements
                     failString[random.nextInt(5)], Toast.LENGTH_SHORT).show();
         }
         else {
-            if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.O)
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
                 vibrator.vibrate(100);
             else vibrator.vibrate(VibrationEffect.createOneShot(100,
                     VibrationEffect.DEFAULT_AMPLITUDE));
