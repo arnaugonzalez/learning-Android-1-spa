@@ -1,6 +1,7 @@
 package arnau.test1;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
@@ -49,7 +50,7 @@ public class MainActivity extends AppCompatActivity implements
     @BindView(R.id.savedT) TextView savedT;
     @BindView(R.id.resetGame) Button resetGame;
     @BindView(R.id.saveGame) Button saveGame;
-    @BindView(R.id.progressBar) ProgressBar progressBar;
+    //@BindView(R.id.progressBar) ProgressBar progressBar;
     @BindView(R.id.activityMainLayout) RelativeLayout mainLayout;
     @BindView(R.id.toolbar1) Toolbar toolbar;
 
@@ -246,9 +247,19 @@ public class MainActivity extends AppCompatActivity implements
 
 
     private class MyTask extends AsyncTask<Void, Void, APODdata> {
+        ProgressDialog dialog;
+
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            dialog  = new ProgressDialog(MainActivity.this);
+            dialog.setMessage("Some message here");
+            dialog.show();
+        }
+
         @Override
         protected APODdata doInBackground(Void... voids) {
-            publishProgress();
             APODdata data = new APODdata();
             try {
                 data = renewAPOD();
@@ -260,14 +271,11 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         @Override
-        protected void onProgressUpdate(Void... values) {
-            super.onProgressUpdate(values);
-            progressBar.setVisibility(progressBar.VISIBLE);
-        }
-
-        @Override
         protected void onPostExecute(APODdata data) {
-            progressBar.setVisibility(progressBar.INVISIBLE);
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+
             showApodDialog(data);
         }
     }
