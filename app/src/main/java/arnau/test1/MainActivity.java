@@ -3,7 +3,6 @@ package arnau.test1;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -11,7 +10,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -24,6 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.Random;
 
 import arnau.test1.fragments.ApodDialogFragment;
@@ -34,6 +33,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import retrofit2.Call;
 import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements
     Vibrator vibrator;
     Random random = new Random();
     String dateDF;
-    APODdata apodData = new APODdata();
+    //APODdata apodData = new APODdata();
     String[] failString = {
             "Houston, we have a problem...",
             "Oh no! You entered the gravitatory field of the Black Hole!",
@@ -158,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements
     @OnClick(R.id.resetGame)
     public void resetGame(){
         scoreUpdate(-scoreV);
-        renewAPOD();
+        new MyTask().execute();
     }
 
     @OnClick(R.id.saveGame)
@@ -178,47 +178,52 @@ public class MainActivity extends AppCompatActivity implements
         }
     }
 
-     @Override
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.datePicker:
                 showDatePickerDialog();
                 return true;
             case R.id.apodDialog:
-                renewAPOD();
+                MyTask task = new MyTask();
+                task.execute();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
     public void showDatePickerDialog(){
-        /* Intent iReceptor = getIntent();
-        int yearIntent = iReceptor.getIntExtra("year", Calendar.getInstance().get(Calendar.YEAR));
-        int monthIntent = iReceptor.getIntExtra("month", Calendar.getInstance().get(Calendar.MONTH));
-        int dayIntent = iReceptor.getIntExtra("day", Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
-        */
         DatePickerFragment newDFragment = new DatePickerFragment();
         newDFragment.show(getFragmentManager(), "datePicker");
     }
-    public void showApodDialog(){
+    public void showApodDialog(APODdata apodData){
         ApodDialogFragment apodFrag = ApodDialogFragment.newInstance(apodData.getTitle_apod(),
                 apodData.getDate_apod(), apodData.getCopyright_apod(),
                 apodData.getExplanation_apod(), apodData.getUrl_apod());
         apodFrag.show(getSupportFragmentManager(),"dialog");
     }
 
-    public void renewAPOD() {
+    public APODdata renewAPOD() throws IOException {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ApodInterface.baseURL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         ApodInterface apodI = retrofit.create(ApodInterface.class);
         Call<APODdata> call = apodI.getAPOD(dateDF);
-        call.enqueue(new Callback<APODdata>() {
+        Response<APODdata> response = call.execute();
+        if(response.isSuccessful()){
+            return response.body();
+        }
+        else {
+            Log.e("Error Code", String.valueOf(response.code()));
+            Log.e("Error Body", response.body().toString());
+            return null;
+        }
+        /*
+        .enqueue(new Callback<APODdata>() {
             @Override
             public void onResponse(Call<APODdata> call, retrofit2.Response<APODdata> response) {
                 if(response.isSuccessful()){
                     apodData = response.body();
-                    showApodDialog();
 
                 }
                 else {
@@ -230,11 +235,33 @@ public class MainActivity extends AppCompatActivity implements
             public void onFailure(Call<APODdata> call, Throwable t) {
                 Toast.makeText(getApplicationContext(), "Retrofit Error :( so sad", Toast.LENGTH_LONG).show();
             }
-        });
+        });*/
     }
 
     @Override
     public void onFinishDatePickerDialog(String inputText)   {
         dateDF = inputText;
     }
+
+
+    private class MyTask extends AsyncTask<Void, Void, APODdata> {
+        @Override
+        protected APODdata doInBackground(Void... voids) {
+            APODdata data = new APODdata();
+            try {
+                data = renewAPOD();
+            } catch (Exception e) {
+                Log.e("APOD",e.getMessage());
+            }
+
+            return data;
+        }
+
+        @Override
+        protected void onPostExecute(APODdata data) {
+            showApodDialog(data);
+        }
+    }
+
 }
+
