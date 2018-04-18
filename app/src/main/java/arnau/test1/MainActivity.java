@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements
     @BindView(R.id.savedT) TextView savedT;
     @BindView(R.id.resetGame) Button resetGame;
     @BindView(R.id.saveGame) Button saveGame;
-
+    @BindView(R.id.progressBar) ProgressBar progressBar;
     @BindView(R.id.activityMainLayout) RelativeLayout mainLayout;
     @BindView(R.id.toolbar1) Toolbar toolbar;
 
@@ -247,6 +248,7 @@ public class MainActivity extends AppCompatActivity implements
     private class MyTask extends AsyncTask<Void, Void, APODdata> {
         @Override
         protected APODdata doInBackground(Void... voids) {
+            publishProgress();
             APODdata data = new APODdata();
             try {
                 data = renewAPOD();
@@ -258,7 +260,14 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         @Override
+        protected void onProgressUpdate(Void... values) {
+            super.onProgressUpdate(values);
+            progressBar.setVisibility(progressBar.VISIBLE);
+        }
+
+        @Override
         protected void onPostExecute(APODdata data) {
+            progressBar.setVisibility(progressBar.INVISIBLE);
             showApodDialog(data);
         }
     }
