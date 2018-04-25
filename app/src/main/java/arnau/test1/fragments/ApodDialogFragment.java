@@ -82,9 +82,8 @@ public class ApodDialogFragment extends DialogFragment {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                                Picasso.with(getContext()).load(getArguments().getString("url"))
-                                        .error(R.drawable.blocker)
-                                        .into(((MainActivity) getActivity()).blocker);
+                                ((MainActivity)getActivity()).
+                                        blocker.setImageBitmap(apodDEF.getUrlBitmap());
                             }
                         })
                 .setNegativeButton("date", //provisional
