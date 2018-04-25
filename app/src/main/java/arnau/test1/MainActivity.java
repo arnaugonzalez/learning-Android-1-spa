@@ -1,9 +1,11 @@
 package arnau.test1;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Point;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Rect;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -11,7 +13,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -24,6 +25,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Random;
 
 import arnau.test1.fragments.ApodDialogFragment;
@@ -33,7 +37,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import retrofit2.Call;
-import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -52,24 +56,13 @@ public class MainActivity extends AppCompatActivity implements
     @BindView(R.id.activityMainLayout) RelativeLayout mainLayout;
     @BindView(R.id.toolbar1) Toolbar toolbar;
 
-
-    /*    @Nullable @BindView(R.id.datePicker) MenuItem datePicker;
-        @Nullable @BindView(R.id.apodDialog) MenuItem apodDialog;
-
-    @Nullable @BindView(R.id.title_APOD) TextView titleApodT;
-    @Nullable @BindView(R.id.date_APOD) TextView dateApodT;
-    @Nullable @BindView(R.id.explanation_APOD) TextView explanationApodT;
-    @Nullable @BindView(R.id.copyright_APOD) TextView copyrightApodT;
-    @Nullable @BindView(R.id.url_APOD) ImageView urlApodIV;
-    @Nullable @BindView(R.id.lAPOD_mainRelative) View mainViewAPOD;
-*/
     //DECLARATIONS
+    ApodDialogFragment apodDialogFrag;
     int scoreV;
     SharedPreferences prefs;
     Vibrator vibrator;
     Random random = new Random();
     String dateDF;
-    APODdata apodData = new APODdata();
     String[] failString = {
             "Houston, we have a problem...",
             "Oh no! You entered the gravitatory field of the Black Hole!",
@@ -92,7 +85,6 @@ public class MainActivity extends AppCompatActivity implements
         autoMove(blocker, 1200);
         vibrator = (Vibrator) getBaseContext().getSystemService(VIBRATOR_SERVICE);
     }
-    //valorar si es pot afegir funcio gif mentre intenta fer apod
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_menu, menu);
@@ -120,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements
 
     //BUTTER KNIFE ONCLICK
     @OnClick(R.id.trigger)
-    public void trigger(){
+    public void trigger() {
         Rect rTrigger = new Rect(
                 (int) trigger.getX(),
                 (int) trigger.getY(),
@@ -158,7 +150,6 @@ public class MainActivity extends AppCompatActivity implements
     @OnClick(R.id.resetGame)
     public void resetGame(){
         scoreUpdate(-scoreV);
-        renewAPOD();
     }
 
     @OnClick(R.id.saveGame)
@@ -185,54 +176,69 @@ public class MainActivity extends AppCompatActivity implements
                 showDatePickerDialog();
                 return true;
             case R.id.apodDialog:
-                renewAPOD();
+                new TaskAPOD().execute();
                 return true;
         }
         return super.onOptionsItemSelected(item);
     }
     public void showDatePickerDialog(){
-        /* Intent iReceptor = getIntent();
-        int yearIntent = iReceptor.getIntExtra("year", Calendar.getInstance().get(Calendar.YEAR));
-        int monthIntent = iReceptor.getIntExtra("month", Calendar.getInstance().get(Calendar.MONTH));
-        int dayIntent = iReceptor.getIntExtra("day", Calendar.getInstance().get(Calendar.DAY_OF_MONTH));
-        */
         DatePickerFragment newDFragment = new DatePickerFragment();
         newDFragment.show(getFragmentManager(), "datePicker");
     }
-    public void showApodDialog(){
-        ApodDialogFragment apodFrag = ApodDialogFragment.newInstance(apodData.getTitle_apod(),
-                apodData.getDate_apod(), apodData.getCopyright_apod(),
-                apodData.getExplanation_apod(), apodData.getUrl_apod());
-        apodFrag.show(getSupportFragmentManager(),"dialog");
-    }
 
-    public void renewAPOD() {
+    public APODdata renewAPOD() throws IOException {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(ApodInterface.baseURL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         ApodInterface apodI = retrofit.create(ApodInterface.class);
         Call<APODdata> call = apodI.getAPOD(dateDF);
-        call.enqueue(new Callback<APODdata>() {
-            @Override
-            public void onResponse(Call<APODdata> call, retrofit2.Response<APODdata> response) {
-                if(response.isSuccessful()){
-                    apodData = response.body();
-                    showApodDialog();
-
-                }
-                else {
-                    Log.e("Error Code", String.valueOf(response.code()));
-                    Log.e("Error Body", response.body().toString());
-                }
-            }
-            @Override
-            public void onFailure(Call<APODdata> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Retrofit Error :( so sad", Toast.LENGTH_LONG).show();
-            }
-        });
+        Response<APODdata> response = call.execute();
+        if(response.isSuccessful()){
+            return response.body();
+        }
+        else {
+            Log.e("Error Code", String.valueOf(response.code()));
+            Log.e("Error Body", response.body().toString());
+            return null;
+        }
     }
 
+    public class TaskAPOD extends AsyncTask<Void, Void, APODdataDEF> {
+        ProgressDialog progressDialog;
+        APODdata dataTask;
+        Bitmap bitmap;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog  = new ProgressDialog(MainActivity.this);
+            progressDialog.setMessage("Loading data...");
+            progressDialog.show();
+
+        }
+
+        @Override
+        protected APODdataDEF doInBackground(Void... voids) {
+            try {
+                dataTask = renewAPOD();
+            } catch (IOException e) { e.printStackTrace(); }
+            try {
+                URL urlB = new URL(dataTask.getUrl_apod());
+                bitmap = BitmapFactory.decodeStream(urlB.openConnection().getInputStream());
+            } catch (IOException e) { e.printStackTrace(); }
+            return APODdataDEF.newDefinitiveAPOD(dataTask, bitmap);
+        }
+
+        @Override
+        protected void onPostExecute(APODdataDEF apodData) {
+            if (progressDialog.isShowing()) {
+                progressDialog.dismiss();
+            }
+            apodDialogFrag = ApodDialogFragment.newInstance(apodData);
+            apodDialogFrag.show(getSupportFragmentManager(),"dialog");
+        }
+    }
     @Override
     public void onFinishDatePickerDialog(String inputText)   {
         dateDF = inputText;

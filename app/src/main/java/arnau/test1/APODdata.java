@@ -50,5 +50,4 @@ public class APODdata {
     public void setCopyright_apod(String copyright) {
         this.copyright = copyright;
     }
-
 }

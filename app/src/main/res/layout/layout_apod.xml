@@ -63,7 +63,9 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="3dp"
                 android:textSize="12sp"
-                android:textStyle="italic" />
+                android:textStyle="italic"
+                android:layout_toEndOf="@id/copyright_Ref"
+                />
             <TextView
                 android:id="@+id/explanation_APOD"
                 android:layout_width="wrap_content"
