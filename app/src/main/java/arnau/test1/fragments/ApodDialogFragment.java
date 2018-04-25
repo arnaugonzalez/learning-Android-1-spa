@@ -37,14 +37,6 @@ public class ApodDialogFragment extends DialogFragment {
 
         ApodDialogFragment apodFrag = new ApodDialogFragment();
         apodDEF = parsedApodDEF;
-        Bundle args = new Bundle();
-        args.putString("title", parsedApodDEF.getTitle_apod());
-        args.putString("date", parsedApodDEF.getDate_apod());
-        args.putString("copyright", parsedApodDEF.getCopyright_apod());
-        args.putString("explanation", parsedApodDEF.getExplanation_apod());
-        //args.putString("url", parsedApodDEF.getUrl_apod());
-        apodFrag.setArguments(args);
-
         return apodFrag;
     }
 
@@ -57,18 +49,12 @@ public class ApodDialogFragment extends DialogFragment {
         explanationApodT = mainViewAPOD.findViewById(R.id.explanation_APOD);
         copyrightApodT = mainViewAPOD.findViewById(R.id.copyright_APOD);
         urlApodIV = mainViewAPOD.findViewById(R.id.url_APOD);
-
     }
 
 
     @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        /* Picasso.with(this.getContext())
-                .load(getArguments().getString("url"))
-                .error(R.drawable.blocker)
-                .into(urlApodIV); */
-        //Caravaggio(getArguments().getString("url"));
         urlApodIV.setImageBitmap(apodDEF.getUrlBitmap());
         titleApodT.setText(apodDEF.getParsedAPOD().getTitle_apod());
         dateApodT.setText(apodDEF.getParsedAPOD().getDate_apod());
