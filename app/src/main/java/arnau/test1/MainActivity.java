@@ -3,6 +3,7 @@ package arnau.test1;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Rect;
 import android.os.AsyncTask;
@@ -11,12 +12,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -87,7 +90,7 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         super.setSupportActionBar(toolbar);
-        prefs = this.getPreferences(Context.MODE_PRIVATE);
+        prefs = this.getSharedPreferences("prefs",MODE_PRIVATE);
         scoreV = prefs.getInt("pkScore", 0);
         scoreT.setText(String.format("%04d", scoreV));
         autoMove(trigger, 750);
@@ -194,8 +197,9 @@ public class MainActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
     public void showDatePickerDialog(){
-        DatePickerFragment newDFragment = new DatePickerFragment();
+        DatePickerFragment newDFragment = DatePickerFragment.newInstance(prefs.getInt("year",0),prefs.getInt("month",0),prefs.getInt("day",0));
         newDFragment.show(getFragmentManager(), "datePicker");
+
     }
     public void showApodDialog(APODdata apodData){
         ApodDialogFragment apodFrag = ApodDialogFragment.newInstance(apodData.getTitle_apod(),

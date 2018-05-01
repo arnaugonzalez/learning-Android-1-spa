@@ -2,17 +2,21 @@ package arnau.test1.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
+import arnau.test1.APODdata;
 import arnau.test1.MainActivity;
 import arnau.test1.R;
 
@@ -83,4 +87,20 @@ public class ApodDialogFragment extends DialogFragment {
         builder.setView(mainViewAPOD);
         return builder.create();
     }
+    private class MyTask extends AsyncTask<Void, Void, APODdata> {
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected void onPostExecute(APODdata apoDdata) {
+            super.onPostExecute(apoDdata);
+        }
+
+        @Override
+        protected APODdata doInBackground(Void... voids) {
+            return null;
+        }
     }
+}
