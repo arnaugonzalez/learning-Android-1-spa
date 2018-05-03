@@ -28,6 +28,7 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Calendar;
 import java.util.Random;
 
 import arnau.test1.fragments.ApodDialogFragment;
@@ -78,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         super.setSupportActionBar(toolbar);
-        prefs = this.getPreferences(Context.MODE_PRIVATE);
+        prefs = this.getSharedPreferences("prefs", Context.MODE_PRIVATE);
         scoreV = prefs.getInt("pkScore", 0);
         scoreT.setText(String.format("%04d", scoreV));
         autoMove(trigger, 750);
@@ -182,7 +183,9 @@ public class MainActivity extends AppCompatActivity implements
         return super.onOptionsItemSelected(item);
     }
     public void showDatePickerDialog(){
-        DatePickerFragment newDFragment = new DatePickerFragment();
+        Calendar c = Calendar.getInstance();
+        DatePickerFragment newDFragment = DatePickerFragment.newInstance(prefs.getInt("year",c.get(Calendar.YEAR)),
+                prefs.getInt("month",c.get(Calendar.MONTH)),prefs.getInt("day",c.get(Calendar.DAY_OF_MONTH)));
         newDFragment.show(getFragmentManager(), "datePicker");
     }
 

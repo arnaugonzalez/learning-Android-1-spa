@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.DatePicker;
 
@@ -20,17 +22,23 @@ import arnau.test1.R;
 public class DatePickerFragment extends DialogFragment
         implements DatePickerDialog.OnDateSetListener {
 
+    public static DatePickerFragment newInstance(int year, int month, int day) {
 
+        DatePickerFragment datePicker = new DatePickerFragment();
 
-    //GET MISSING DATE FOR RESTORING SESSION FROM BUNDLEEEE()
-
+        Bundle args = new Bundle();
+        args.putInt("year", year);
+        args.putInt("day", day);
+        args.putInt("month", month);
+        datePicker.setArguments(args);
+        return datePicker;
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        final Calendar c = Calendar.getInstance();
-        int year = c.get(Calendar.YEAR);
-        int month = c.get(Calendar.MONTH);
-        int day = c.get(Calendar.DAY_OF_MONTH);
+        int year = getArguments().getInt("year");
+        int month =getArguments().getInt("month");
+        int day = getArguments().getInt("day");
         DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(),
                 this, year, month, day);
         datePickerDialog.setTitle(R.string.dateDialogT);
@@ -54,10 +62,12 @@ public class DatePickerFragment extends DialogFragment
     }
 
     public void onDateSet(DatePicker view, int year, int month, int day) {
-        Intent i = new Intent(getActivity(), DatePickerFragment.class);
-        i.putExtra("year", year);
-        i.putExtra("month", month);
-        i.putExtra("day", day);
+        SharedPreferences prefs = getActivity().getSharedPreferences("prefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("year", year);
+        editor.putInt("month", month);
+        editor.putInt("day", day);
+        editor.apply();
         String datePicked = year + "-" + (month + 1) + "-" + day;
         listener.onFinishDatePickerDialog(datePicked);
     }
