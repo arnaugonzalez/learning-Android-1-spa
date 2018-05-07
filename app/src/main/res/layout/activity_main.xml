@@ -50,7 +50,8 @@
         android:layout_toEndOf="@+id/saveGame"
         android:layout_toStartOf="@+id/resetGame"
         android:text="@string/saved"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        android:background="#60000000"/>
     <Button
         android:id="@+id/resetGame"
         android:layout_width="wrap_content"

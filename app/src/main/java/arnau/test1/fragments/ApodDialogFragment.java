@@ -50,9 +50,9 @@ public class ApodDialogFragment extends DialogFragment {
         copyrightApodT.setText(apodDEF.getParsedAPOD().getCopyright_apod());
         explanationApodT.setText(apodDEF.getParsedAPOD().getExplanation_apod());
         //setStyle(DialogFragment.STYLE_NO_FRAME, R.style.Theme_AppCompat_DialogWhenLarge);
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity())
                 .setIcon(R.drawable.satellite)
-                .setPositiveButton("replace",
+                .setPositiveButton(R.string.dialogPOSITIVE,
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {

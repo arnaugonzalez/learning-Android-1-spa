@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
@@ -13,11 +14,15 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
+import android.support.design.widget.BaseTransientBottomBar;
+import android.support.design.widget.Snackbar;
+import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -30,6 +35,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Random;
+
+import javax.xml.datatype.Duration;
 
 import arnau.test1.fragments.ApodDialogFragment;
 import arnau.test1.fragments.DatePickerFragment;
@@ -59,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements
 
     //DECLARATIONS
     ApodDialogFragment apodDialogFrag;
+
     int scoreV;
     SharedPreferences prefs;
     Vibrator vibrator;
@@ -151,6 +159,11 @@ public class MainActivity extends AppCompatActivity implements
     @OnClick(R.id.resetGame)
     public void resetGame(){
         scoreUpdate(-scoreV);
+        if(BOOLEEEEEAN) {
+            Snackbar snackbar = Snackbar.make(linV, R.string.snackbarQ, BaseTransientBottomBar.LENGTH_LONG);
+            snackbar.setAction(R.string.snackbarA, new SnackbarListener());
+            snackbar.show();
+        }
     }
 
     @OnClick(R.id.saveGame)
@@ -245,5 +258,13 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onFinishDatePickerDialog(String inputText)   {
         dateDF = inputText;
+    }
+
+    public class SnackbarListener implements View.OnClickListener{
+
+        @Override
+        public void onClick(View v) {
+            blocker.setImageResource(R.drawable.black_hole);
+            }
     }
 }

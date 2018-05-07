@@ -14,5 +14,7 @@
     <string name="copyrightRef">Photo by/from: </string>
     <string name="dateDialogT">Date picker</string>
     <string name="defCopyright">NASA archives.</string>
-
+    <string name="dialogPOSITIVE">Change game obstacle</string>
+    <string name="snackbarQ">Do you also want the black hole back?</string>
+    <string name="snackbarA">Reset obstacle image</string>
 </resources>
