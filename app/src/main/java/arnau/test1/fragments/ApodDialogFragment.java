@@ -2,7 +2,9 @@ package arnau.test1.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -59,6 +61,11 @@ public class ApodDialogFragment extends DialogFragment {
                                 dialog.dismiss();
                                 ((MainActivity)getActivity()).
                                         blocker.setImageBitmap(apodDEF.getUrlBitmap());
+                                SharedPreferences prefs = getActivity().getSharedPreferences("prefs", Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = prefs.edit();
+                                editor.putInt("changed", 1).apply();
+                                editor.commit();
+
                             }
                         })
                 .setNegativeButton("date", //provisional

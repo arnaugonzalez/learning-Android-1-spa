@@ -88,6 +88,9 @@ public class MainActivity extends AppCompatActivity implements
         ButterKnife.bind(this);
         super.setSupportActionBar(toolbar);
         prefs = this.getSharedPreferences("prefs", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("changed", 0).apply();
+        editor.commit();
         scoreV = prefs.getInt("pkScore", 0);
         scoreT.setText(String.format("%04d", scoreV));
         autoMove(trigger, 750);
@@ -159,7 +162,7 @@ public class MainActivity extends AppCompatActivity implements
     @OnClick(R.id.resetGame)
     public void resetGame(){
         scoreUpdate(-scoreV);
-        if(BOOLEEEEEAN) {
+        if( prefs.getInt("changed",0) != 0) {
             Snackbar snackbar = Snackbar.make(linV, R.string.snackbarQ, BaseTransientBottomBar.LENGTH_LONG);
             snackbar.setAction(R.string.snackbarA, new SnackbarListener());
             snackbar.show();
@@ -265,6 +268,9 @@ public class MainActivity extends AppCompatActivity implements
         @Override
         public void onClick(View v) {
             blocker.setImageResource(R.drawable.black_hole);
+            SharedPreferences.Editor editor = prefs.edit();
+            editor.putInt("changed",0).apply();
+            editor.commit();
             }
     }
 }
