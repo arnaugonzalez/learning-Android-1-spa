@@ -43,7 +43,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content">
             <ImageView
-                android:id="@+id/url_APOD"
+                android:id="@+id/image_APOD"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
@@ -53,8 +53,8 @@
                 android:text="@string/copyrightRef"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/url_APOD"
-                android:layout_alignStart="@+id/url_APOD"
+                android:layout_below="@+id/image_APOD"
+                android:layout_alignStart="@+id/image_APOD"
                 android:textSize="12sp"
                 android:textStyle="italic|bold" />
             <TextView

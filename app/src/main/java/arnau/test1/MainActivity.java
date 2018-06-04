@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
@@ -16,7 +15,6 @@ import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.res.ResourcesCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -31,12 +29,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Random;
-
-import javax.xml.datatype.Duration;
 
 import arnau.test1.fragments.ApodDialogFragment;
 import arnau.test1.fragments.DatePickerFragment;
@@ -93,6 +88,7 @@ public class MainActivity extends AppCompatActivity implements
         editor.commit();
         scoreV = prefs.getInt("pkScore", 0);
         scoreT.setText(String.format("%04d", scoreV));
+        if(scoreV != 0) savedT.setText(getString(R.string.savedNEW) + " " + scoreV);
         autoMove(trigger, 750);
         autoMove(blocker, 1200);
         vibrator = (Vibrator) getBaseContext().getSystemService(VIBRATOR_SERVICE);
@@ -126,15 +122,15 @@ public class MainActivity extends AppCompatActivity implements
     @OnClick(R.id.trigger)
     public void trigger() {
         Rect rTrigger = new Rect(
-                (int) trigger.getX(),
+                (int) trigger.getX() + trigger.getWidth()/8,
                 (int) trigger.getY(),
-                (int) trigger.getX() + trigger.getWidth(),
-                (int) trigger.getY() + trigger.getHeight());
+                (int) (trigger.getX() + trigger.getWidth()*0.15),
+                (int) trigger.getY());
         Rect rBlocker = new Rect(
-                (int) blocker.getX(),
-                (int) blocker.getY(),
-                (int) blocker.getX() + blocker.getWidth(),
-                (int) blocker.getY() + blocker.getHeight());
+                (int) blocker.getX() + blocker.getWidth()/14,
+                (int) blocker.getY() + blocker.getHeight()/14,
+                (int) (blocker.getX() + blocker.getWidth()*0.93),
+                (int) (blocker.getY() + blocker.getHeight()*0.93));
         if(Rect.intersects(rTrigger,rBlocker)) {
             scoreUpdate(-3);
             if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
@@ -200,8 +196,8 @@ public class MainActivity extends AppCompatActivity implements
     }
     public void showDatePickerDialog(){
         Calendar c = Calendar.getInstance();
-        DatePickerFragment newDFragment = DatePickerFragment.newInstance(prefs.getInt("year",c.get(Calendar.YEAR)),
-                prefs.getInt("month",c.get(Calendar.MONTH)),prefs.getInt("day",c.get(Calendar.DAY_OF_MONTH)));
+        DatePickerFragment newDFragment = DatePickerFragment.newInstance(prefs.getInt("year", c.get(Calendar.YEAR)),
+                prefs.getInt("month", c.get(Calendar.MONTH)),prefs.getInt("day", c.get(Calendar.DAY_OF_MONTH)));
         newDFragment.show(getFragmentManager(), "datePicker");
     }
 
@@ -226,8 +222,6 @@ public class MainActivity extends AppCompatActivity implements
     public class TaskAPOD extends AsyncTask<Void, Void, APODdataDEF> {
         ProgressDialog progressDialog;
         APODdata dataTask;
-        Bitmap bitmap;
-
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
@@ -241,12 +235,14 @@ public class MainActivity extends AppCompatActivity implements
         protected APODdataDEF doInBackground(Void... voids) {
             try {
                 dataTask = renewAPOD();
-            } catch (IOException e) { e.printStackTrace(); }
-            try {
-                URL urlB = new URL(dataTask.getUrl_apod());
-                bitmap = BitmapFactory.decodeStream(urlB.openConnection().getInputStream());
-            } catch (IOException e) { e.printStackTrace(); }
-            return APODdataDEF.newDefinitiveAPOD(dataTask, bitmap);
+                if(!dataTask.getMedia_type().equals("image"))
+                    return APODdataDEF.newDefinitiveAPOD(dataTask, null);
+                else {
+                    URL urlB = new URL(dataTask.getUrl_apod());
+                    Bitmap bitmap = BitmapFactory.decodeStream(urlB.openConnection().getInputStream());
+                    return APODdataDEF.newDefinitiveAPOD(dataTask, bitmap);
+                }
+            } catch (IOException e) { e.printStackTrace(); return null;}
         }
 
         @Override

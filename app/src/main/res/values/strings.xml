@@ -1,5 +1,6 @@
 <resources>
     <string name="urlAPOD">https://api.nasa.gov/planetary/</string>
+    <string name="apiKeyGC">AIzaSyCva-PYnIT4J3UeEyL3P_Q_AbBKS7FmRRw</string>
     <string name="app_name">The floor is NASA!</string>
     <string name="save">SAVE SCORE</string>
     <string name="start">RESET GAME</string>

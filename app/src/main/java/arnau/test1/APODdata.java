@@ -10,6 +10,7 @@ public class APODdata {
     private String explanation;
     private String url;
     private String copyright;
+    private String media_type;
 
     public String getTitle_apod() {
         return title;
@@ -49,5 +50,13 @@ public class APODdata {
 
     public void setCopyright_apod(String copyright) {
         this.copyright = copyright;
+    }
+
+    public String getMedia_type() {
+        return media_type;
+    }
+
+    public void setMedia_type(String media_type) {
+        this.media_type = media_type;
     }
 }
